@@ -49,6 +49,9 @@ aDireita(X,Y,Lista) :- aEsquerda(Y,X,Lista).
 noCanto(X,Lista) :- last(Lista,X).
 noCanto(X,[X|_]).
 
+%X está exatamente à esquerda de Y
+exatamenteEsquerda(X, Y, Lista) :- aEsquerda(X, Y, Lista), aoLado(X, Y, Lista).
+
 todosDiferentes([]).
 todosDiferentes([H|T]) :- not(member(H,T)), todosDiferentes(T).
 
@@ -80,14 +83,14 @@ solucao(ListaSolucao) :-
 	  member(degustador(_, _, _, _, acampar, santacatarina), ListaSolucao),
 
     %Em uma das pontas está o homem que gosta de Montanhismo.
-    noCanto(desgustador(_, _, _, _, montanhismo, _), ListaSolucao),
+    noCanto(degustador(_, _, _, _, montanhismo, _), ListaSolucao),
 
     %Quem está degustando o vinho tipo Tannat está ao lado de quem gosta de queijo Emmenthal.
 	  aoLado(degustador(_, _, tannat, _, _, _),
            degustador(_, _, _, emmenthal, _, _), ListaSolucao),
 
     %O catarinense está exatamente à esquerda do homem que está degustando o vinho tipo Carmenere.
-    aEsquerda(degustador(_, _, _, _, _, santacatarina),
+    exatamenteEsquerda(degustador(_, _, _, _, _, santacatarina),
               degustador(_, _, carmenere, _, _, _), ListaSolucao),
 
     %Márcio está degustando o vinho tipo Tannat.
